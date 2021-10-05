@@ -65,6 +65,10 @@ namespace WSMiVenta.Models
                     .HasColumnType("decimal(16, 2)")
                     .HasColumnName("importe");
 
+                entity.Property(e => e.PrecioUnitario)
+                    .HasColumnType("decimal(16, 2)")
+                    .HasColumnName("precioUnitario");
+
                 entity.HasOne(d => d.IdProductoNavigation)
                     .WithMany(p => p.Conceptos)
                     .HasForeignKey(d => d.IdProducto)

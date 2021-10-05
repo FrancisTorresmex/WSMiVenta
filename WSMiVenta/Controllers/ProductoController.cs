@@ -11,68 +11,68 @@ using WSMiVenta.Services;
 
 namespace WSMiVenta.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/[controller]")]    
-    public class ClienteController : ControllerBase
+    public class ProductoController : ControllerBase
     {
-        private IClienteService _client; //asignación de tipo IClienteService
+        private IProductoService _product; //asignación de tipo IProductoService
 
-        public ClienteController(IClienteService client) 
+        public ProductoController(IProductoService product)
         {
-            this._client = client;
+            this._product = product;
         }
 
+        //Ver todo
         [HttpGet]
-        public IActionResult GetClient()
+        public IActionResult GetProduct()
         {
-            ResponseGeneral response = new ResponseGeneral(); //objeto de respuesta gral
-            
+            ResponseGeneral response = new ResponseGeneral(); 
+
             try
             {
                 using (MiVentaContext db = new MiVentaContext())
                 {
-                    var lst = db.Clientes.OrderByDescending(i => i.Id).ToList(); //enlistamos la tabla cliente del id mas alto al mas bajo
-                    response.Success = 1; //le indicamos que salio bien todo
-                    response.Data = lst; 
+                    var lst = db.Productos.OrderBy(i => i.Id).ToList();
+                    response.Success = 1;
+                    response.Data = lst;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Message = ex.Message;
-                Console.WriteLine(ex.InnerException);
             }
 
             return Ok(response);
         }
 
-        //añadir
+        //Agregar
         [HttpPost]
-        public IActionResult Add(ClienteRequest model)
+        public IActionResult Add(ProductoRequest model)
         {
             ResponseGeneral response = new ResponseGeneral();            
 
             try
             {
-                _client.Add(model);
+                _product.Add(model);                
                 response.Success = 1;
             }
             catch (Exception ex)
             {
                 response.Message = ex.Message;
             }
+
             return Ok(response);
         }
-
 
         //Editar
         [HttpPut]
-        public IActionResult Edit(ClienteRequest model)
+        public IActionResult Edit(ProductoRequest model)
         {
             ResponseGeneral response = new ResponseGeneral();            
 
             try
             {
-                _client.Edit(model);
+                _product.Edit(model);
                 response.Success = 1;
             }
             catch (Exception ex)
@@ -83,8 +83,6 @@ namespace WSMiVenta.Controllers
             return Ok(response);
         }
 
-
-        //eliminar
         [HttpDelete]
         public IActionResult Delete(int id)
         {
@@ -92,12 +90,12 @@ namespace WSMiVenta.Controllers
 
             try
             {
-                _client.Delete(id);
-                response.Success = 1; //si se elimina ok
+                _product.Delete(id);
+                response.Success = 1;
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;                
+                response.Message = ex.Message;
             }
 
             return Ok(response);

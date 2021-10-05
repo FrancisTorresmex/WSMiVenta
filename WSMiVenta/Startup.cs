@@ -48,6 +48,8 @@ namespace WSMiVenta
 
             //Inyecciónes por scoped es para cada request de mi servicio
             services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<IProductoService, ProductoService>();
+            services.AddScoped<IVentaService, VentaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
