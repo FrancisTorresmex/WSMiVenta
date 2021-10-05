@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,11 +7,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using WSMiVenta.Models.Common;
 using WSMiVenta.Services;
 
 namespace WSMiVenta
@@ -50,6 +54,34 @@ namespace WSMiVenta
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<IVentaService, VentaService>();
+            services.AddScoped<IUsuarioService, UsuarioServicio>();
+
+            //Configuración de JWT -------------------------------------------------------------------------------------------------------------------------------------------
+            var appSettingsSecction = Configuration.GetSection("AppSettings"); //variable, el GetSection lleva entre parentesis el nombre de la variable declarada en appSettings.json
+            services.Configure<AppSettingsCommon>(appSettingsSecction);
+
+            //JWT
+            var appSettings = appSettingsSecction.Get<AppSettingsCommon>();
+            var llave = Encoding.ASCII.GetBytes(appSettings.Secreto); //encryptamos mi secreto
+
+            services.AddAuthentication(d =>
+            { //damos de alta el token
+                d.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                d.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(d =>
+                {
+                    d.RequireHttpsMetadata = false;
+                    d.SaveToken = true; //vida del token osea que se pueda guardar
+                    d.TokenValidationParameters = new TokenValidationParameters // parametros de validación del token
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(llave),  //esta es la que dara el token, asi que le asignamos el secreto, ahora asignada en llave
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +97,10 @@ namespace WSMiVenta
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MiCors); //para CORS
+
+            app.UseAuthentication(); //le decimos que ocupara autenticación
 
             app.UseAuthorization();
 
