@@ -18,4 +18,8 @@ PM> `Scaffold-DBContext "Server=localhost;Database=MiVenta;Trusted_Connection=Tr
 
 PM> `Scaffold-DBContext "Server=localhost;Database=MiVenta;User=sa;Password=contraseña;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models`
 
+> Nuevos elementos como tablas
+
+PM> `Scaffold-DBContext "Server=localhost;DataBase=MiVenta;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force`
+
 > El  `-outputDir` es porque sin el se genera en la raiz del proyecto y en este caso se queria generar en la carpeta llamada Models del proyecto.
