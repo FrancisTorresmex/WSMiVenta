@@ -20,6 +20,7 @@ namespace WSMiVenta.Models
         public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<Concepto> Conceptos { get; set; }
         public virtual DbSet<Producto> Productos { get; set; }
+        public virtual DbSet<Rol> Rols { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
         public virtual DbSet<Ventum> Venta { get; set; }
 
@@ -28,7 +29,7 @@ namespace WSMiVenta.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost;Database=MiVenta;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost;DataBase=MiVenta;Trusted_Connection=True;");
             }
         }
 
@@ -99,6 +100,19 @@ namespace WSMiVenta.Models
                     .HasColumnName("precioUnitario");
             });
 
+            modelBuilder.Entity<Rol>(entity =>
+            {
+                entity.ToTable("rol");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+            });
+
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.ToTable("usuario");
@@ -111,6 +125,8 @@ namespace WSMiVenta.Models
                     .IsUnicode(false)
                     .HasColumnName("email");
 
+                entity.Property(e => e.IdRol).HasColumnName("id_rol");
+
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -122,6 +138,11 @@ namespace WSMiVenta.Models
                     .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("password");
+
+                entity.HasOne(d => d.IdRolNavigation)
+                    .WithMany(p => p.Usuarios)
+                    .HasForeignKey(d => d.IdRol)
+                    .HasConstraintName("FK_usuario_rol");
             });
 
             modelBuilder.Entity<Ventum>(entity =>
