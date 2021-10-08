@@ -30,14 +30,16 @@ namespace WSMiVenta.Services
         {
             using (MiVentaContext db = new MiVentaContext())
             {
-                var user = new Usuario();
+                var user = new Usuario();                
+                
                 var search = db.Usuarios.Where(d => d.Email == model.Email).FirstOrDefault(); //busco si ya existe el correo
 
                 if (search == null) //si no existe retornamos el usuario
                 {
                     user.Email = model.Email;
                     user.Password = Encriptar.GetSHA256(model.Password); //encripto la contraseña a sha256
-                    user.Nombre = model.Nombre;
+                    user.Nombre = model.Nombre;                    
+                    user.IdRol = 6; //aqui debe ir el id del rol "normal"
 
                     db.Usuarios.Add(user);
                     db.SaveChanges();
@@ -86,6 +88,7 @@ namespace WSMiVenta.Services
                     {
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), //le agrego la id al token
                         new Claim(ClaimTypes.Email, usuario.Email), //le agrego el correo al token
+                        new Claim(ClaimTypes.Role, usuario.IdRol.ToString()) //agrego el tipo de rol
                     }
                 ),
                 Expires = DateTime.UtcNow.AddDays(15), //le agrego que expire cada 15 dias

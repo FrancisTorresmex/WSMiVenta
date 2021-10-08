@@ -58,7 +58,7 @@ namespace WSMiVenta.Controllers
 
             //si no existe
             response.Success = 1;
-            response.Data = user;
+            //response.Data = user;
 
             return Ok(response);
         }

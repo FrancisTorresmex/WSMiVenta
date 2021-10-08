@@ -10,6 +10,8 @@ namespace WSMiVenta.Models.Request
     {
         public int Id { get; set; }
 
+        public int IdUsuario { get; set; }
+
         //public DateTime Fecha { get; set; } //esto se obtendra en el controller
         //public double total { get; set; }
 

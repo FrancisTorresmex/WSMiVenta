@@ -20,7 +20,8 @@ namespace WSMiVenta.Services
                         var sale = new Ventum(); //Ventum es mi tabla venta, pero se cambio el nombre por comando
 
                         sale.Total = model.Conceptos.Sum(op => op.Cantidad * op.PrecioUnitario); //operación para obtener el total
-                        sale.Fecha = DateTime.Now;                        
+                        sale.Fecha = DateTime.Now;
+                        sale.IdUsuario = model.IdUsuario; //id del usuario que realiza la compra 
                         sale.IdCliente = model.Id;
                         db.Venta.Add(sale);
                         db.SaveChanges(); //al momento de guardar, entity framework le asignara una id a venta

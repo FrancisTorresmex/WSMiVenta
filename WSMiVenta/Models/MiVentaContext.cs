@@ -29,7 +29,7 @@ namespace WSMiVenta.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=localhost;DataBase=MiVenta;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=MiVenta;Trusted_Connection=True;");
             }
         }
 
@@ -157,6 +157,8 @@ namespace WSMiVenta.Models
 
                 entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
 
+                entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+
                 entity.Property(e => e.Total)
                     .HasColumnType("decimal(16, 2)")
                     .HasColumnName("total");
@@ -166,6 +168,11 @@ namespace WSMiVenta.Models
                     .HasForeignKey(d => d.IdCliente)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_venta_cliente");
+
+                entity.HasOne(d => d.IdUsuarioNavigation)
+                    .WithMany(p => p.Venta)
+                    .HasForeignKey(d => d.IdUsuario)
+                    .HasConstraintName("FK_venta_usuario");
             });
 
             OnModelCreatingPartial(modelBuilder);

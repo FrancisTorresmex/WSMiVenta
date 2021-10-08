@@ -7,6 +7,11 @@ namespace WSMiVenta.Models
 {
     public partial class Usuario
     {
+        public Usuario()
+        {
+            Venta = new HashSet<Ventum>();
+        }
+
         public int Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -14,5 +19,6 @@ namespace WSMiVenta.Models
         public string Nombre { get; set; }
 
         public virtual Rol IdRolNavigation { get; set; }
+        public virtual ICollection<Ventum> Venta { get; set; }
     }
 }
