@@ -18,6 +18,8 @@ namespace WSMiVenta.Services
                     var product = new Producto();
                     product.Nombre = model.Nombre;
                     product.PrecioUnitario = model.PrecioUnitario;
+                    product.Existencia = 1;
+                    product.Url = model.Url;
                     db.Add(product);
                     db.SaveChanges();
                 }
@@ -38,6 +40,8 @@ namespace WSMiVenta.Services
                     Producto product = db.Productos.Find(model.Id);
                     product.Nombre = model.Nombre;
                     product.PrecioUnitario = model.PrecioUnitario;
+                    product.Existencia = model.Existencia;
+                    product.Url = model.Url;
                     db.Update(product);
                     db.SaveChanges();
                 }

@@ -89,6 +89,8 @@ namespace WSMiVenta.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Existencia).HasColumnName("existencia");
+
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -98,6 +100,11 @@ namespace WSMiVenta.Models
                 entity.Property(e => e.PrecioUnitario)
                     .HasColumnType("decimal(16, 2)")
                     .HasColumnName("precioUnitario");
+
+                entity.Property(e => e.Url)
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    .HasColumnName("url");
             });
 
             modelBuilder.Entity<Rol>(entity =>
