@@ -58,7 +58,7 @@ namespace WSMiVenta.Services
             AccessoResponse access = new AccessoResponse();
 
             using (MiVentaContext db = new MiVentaContext())
-            {
+            {                
                 string spassword = Encriptar.GetSHA256(model.Password); //uso mi clase Encrypt con el metodo getSha256 y le paso de parametro de model recibido para encryptar
 
                 // buscamos en la bd con la tabla Usuarios donde el Email recibido se encuentre, y tambien la contraseña encryptada sea igual 
@@ -66,7 +66,9 @@ namespace WSMiVenta.Services
 
                 if (user == null) return null; // si no encuentra coincidencias retornamos null
 
+                access.Id = user.Id;
                 access.Email = user.Email; //si lo encuentra, asignamos
+                access.Rol = (int)user.IdRol;
                 access.Token = GetToken(user);                                                          
                 
             }
@@ -87,7 +89,7 @@ namespace WSMiVenta.Services
                     new Claim[]
                     {
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), //le agrego la id al token
-                        new Claim(ClaimTypes.Email, usuario.Email), //le agrego el correo al token
+                        new Claim(ClaimTypes.Email, usuario.Email), //le agrego el correo al token                        
                         new Claim(ClaimTypes.Role, usuario.IdRol.ToString()) //agrego el tipo de rol
                     }
                 ),

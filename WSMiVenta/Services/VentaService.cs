@@ -12,7 +12,7 @@ namespace WSMiVenta.Services
         public void Add(VentaRequest model)
         {
             using (MiVentaContext db = new MiVentaContext())
-            {
+            {                
                 using (var transaction = db.Database.BeginTransaction()) //con BeginTransaction iniciamos una inserccion en la base (que se podra revertir si sale algo mal)
                 {
                     try
@@ -22,7 +22,7 @@ namespace WSMiVenta.Services
                         sale.Total = model.Conceptos.Sum(op => op.Cantidad * op.PrecioUnitario); //operación para obtener el total
                         sale.Fecha = DateTime.Now;
                         sale.IdUsuario = model.IdUsuario; //id del usuario que realiza la compra 
-                        sale.IdCliente = model.Id;
+                        sale.IdCliente = model.IdCliente;
                         db.Venta.Add(sale);
                         db.SaveChanges(); //al momento de guardar, entity framework le asignara una id a venta
 

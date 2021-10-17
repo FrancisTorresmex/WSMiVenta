@@ -8,7 +8,7 @@ namespace WSMiVenta.Models.Request
 {
     public class VentaRequest
     {
-        public int Id { get; set; }
+        public int IdCliente { get; set; }
 
         public int IdUsuario { get; set; }
 
