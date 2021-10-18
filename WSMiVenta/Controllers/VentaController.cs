@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using WSMiVenta.Services;
 namespace WSMiVenta.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize] //solo los que tengan token (inicio se sesón), pueden hacer esta petición
     [ApiController]
     public class VentaController : ControllerBase
     {

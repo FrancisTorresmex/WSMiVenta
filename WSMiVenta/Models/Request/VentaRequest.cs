@@ -8,13 +8,16 @@ namespace WSMiVenta.Models.Request
 {
     public class VentaRequest
     {
+        [Required]
         public int IdCliente { get; set; }
 
+        [Required]
         public int IdUsuario { get; set; }
 
         //public DateTime Fecha { get; set; } //esto se obtendra en el controller
         //public double total { get; set; }
 
+        [Required]
         public List<Concepto> Conceptos { get; set; }
 
     }

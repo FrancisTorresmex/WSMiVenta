@@ -38,6 +38,28 @@ namespace WSMiVenta
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WSMiVenta", Version = "v1" });
+
+                //añadir el barer token en la documentación de swager (para que podamos usarlo como postman) ------
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "JWT Authentication",
+                    Description = "Colocar aqui SOLO el token",
+                    In = ParameterLocation.Header, //localización de texto
+                    Type = SecuritySchemeType.Http, //tipo de seguridad
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {securityScheme, new string[] { }}
+                }); 
+                //-----------------------------------------------------------------------------------------------------
             });
 
             //Agregar CORS

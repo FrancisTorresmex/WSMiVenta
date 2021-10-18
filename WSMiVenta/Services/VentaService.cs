@@ -44,7 +44,7 @@ namespace WSMiVenta.Services
                     catch (Exception ex)
                     {
                         transaction.Rollback(); //si la transaccion falla, con esto regreso al estado anterior antes así es como si esa transacción
-                        //throw new Exception("Error al agregar la compra");
+                        throw new Exception("Error al agregar la compra");
                         Console.WriteLine(ex.InnerException);
                     }
                 }                
