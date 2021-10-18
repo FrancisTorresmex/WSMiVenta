@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using WSMiVenta.Services;
 namespace WSMiVenta.Controllers
 {
     [ApiController]
+    [Authorize] //solo los registrados pueden acceder
     [Route("api/[controller]")]    
     public class ClienteController : ControllerBase
     {

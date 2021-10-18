@@ -32,7 +32,8 @@ namespace WSMiVenta.Controllers
             if (user == null)
             {
                 response.Message = "Usuario o contraseña incorrectos";
-                return BadRequest(response);
+                //return BadRequest(response);
+                return Ok(response);
             }
 
             //si existe
@@ -52,8 +53,9 @@ namespace WSMiVenta.Controllers
 
             if (user == null) //si el correo ya existe
             {
-                response.Message = "El Correo ya existe";                
-                return BadRequest(response);
+                response.Message = "El Correo ya existe";
+                //return BadRequest(response);
+                return Ok(response);
             }
 
             //si no existe

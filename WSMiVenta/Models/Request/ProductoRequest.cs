@@ -19,6 +19,7 @@ namespace WSMiVenta.Models.Request
         [Range(1, double.MaxValue, ErrorMessage ="El precioUnitario debe ser mayor a 0")]
         public decimal PrecioUnitario { get; set; }
 
+        [Required]
         public int Existencia { get; set; } //la existencia en 1, osea en existencia (0 = agotado)
 
         public string Url { get; set; }

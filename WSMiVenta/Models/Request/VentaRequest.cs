@@ -29,8 +29,10 @@ namespace WSMiVenta.Models.Request
 
         public decimal Importe { get; set; }
 
+        [Required]
         public decimal PrecioUnitario { get; set; }
 
+        [Required]
         public int IdProducto { get; set; }
 
     }
