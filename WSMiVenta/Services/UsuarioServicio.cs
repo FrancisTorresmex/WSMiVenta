@@ -103,5 +103,34 @@ namespace WSMiVenta.Services
         }
 
 
+        //Modificar datos de usuario
+        public void EditUser (ModificarUsuarioRequest model)
+        {
+            using(MiVentaContext db = new MiVentaContext())
+            {
+                try
+                {
+                    Usuario user = db.Usuarios.Find(model.Id);                    
+
+                    string spassword = Encriptar.GetSHA256(model.OldPassword); //encriptamos la contraseña para compararla con la que esta en la base
+                    
+                    if(user.Password == spassword) //si la contraseña coincide accedemos a cambiar los datos (nombre y contraseña)
+                    {
+                        string newPassword = Encriptar.GetSHA256(model.NewPassword); //encripto la nueva contraseña
+
+                        user.Password = newPassword; 
+                        user.Nombre = model.Nombre;
+                        db.Update(user);
+                        db.SaveChanges();
+                    }                    
+
+                }catch(Exception)
+                {
+                    throw new Exception("No se puedo editar el usuario correctamente");
+                }
+                
+            }
+        }
+        
     }
 }

@@ -64,5 +64,26 @@ namespace WSMiVenta.Controllers
 
             return Ok(response);
         }
+
+
+        //Modificar cuenta
+        [HttpPut("Actualizar")]
+        public IActionResult UpdateUser([FromBody] ModificarUsuarioRequest model)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                _user.EditUser(model);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                Console.WriteLine(ex.InnerException);
+            }
+            return Ok(response);
+        }
+
     }
 }

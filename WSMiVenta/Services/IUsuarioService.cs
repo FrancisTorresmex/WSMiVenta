@@ -13,5 +13,7 @@ namespace WSMiVenta.Services
         Usuario Registro(RegistroRequest model); //para registro
 
         AccessoResponse Autentificar(AccesoRequest model); //objeto de tipo AccessoResponse (para ingresar al sistema)
+
+        public void EditUser(ModificarUsuarioRequest model); //Editar datos del usuario (nombre y contraseña)
     }
 }
