@@ -25,14 +25,39 @@ namespace WSMiVenta.Controllers
         }
 
         //Ver pedidos (admin)
-        [HttpGet]
-        public IActionResult getPedido(int pag)
+        [HttpGet("Administrador")]
+        public IActionResult getPedidos(int pag)
         {
           ResponseGeneral response = new ResponseGeneral();
 
             try
             {
-                response.Data = _orders.getOrders(pag);
+                response.Data = _orders.getOrdersAdmin(pag);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+            return Ok(response);
+        }
+
+
+
+        //Ver pedidos (usuario)
+        [HttpGet("Usuario")]
+        public IActionResult getPedio(int id, int pag)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                var lst = _orders.getOrdersUser(id, pag);
+                if(lst == null)
+                {
+                    return BadRequest("Lista vacia");
+                }
+                response.Data = lst;
                 response.Success = 1;
             }
             catch (Exception ex)

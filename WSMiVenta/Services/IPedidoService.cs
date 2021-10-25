@@ -9,6 +9,8 @@ namespace WSMiVenta.Services
 {
     public interface IPedidoService
     {
-        List<Ventum> getOrders(int pag);
+        List<Ventum> getOrdersAdmin(int pag);
+
+        List<Ventum> getOrdersUser(int id, int pag);
     }
 }

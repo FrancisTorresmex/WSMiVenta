@@ -11,7 +11,7 @@ namespace WSMiVenta.Services
     {
 
         //obtener todos los pedidos (con paginación) (admin)
-        public List<Ventum> getOrders(int pag = 1)
+        public List<Ventum> getOrdersAdmin(int pag = 1)
         {
             var cantidadRegistrosPorPagina = 5; //numero de registros (ordenes) que se mostraran por página
 
@@ -58,6 +58,56 @@ namespace WSMiVenta.Services
                 // luego con take tomamos esos registros y los mostramos
                 return lst.Skip((pag - 1) * cantidadRegistrosPorPagina) 
                     .Take(cantidadRegistrosPorPagina).ToList();
+            }
+        }
+
+
+        //Obtener todos los pedidos (paginado) (usuario normal)
+        public List<Ventum> getOrdersUser(int idUsuario, int pag = 1)
+        {
+            var cantidadDeRegistrosPorPagina = 5; //numero de pedidos a mostrar por página
+
+            using (MiVentaContext db = new MiVentaContext())
+            {
+                PedidoRequest model = new PedidoRequest();
+                List<Ventum> lst = new List<Ventum>();
+
+                try
+                {
+                    //recorremos la tabla ventas donde el id de usuario coincida con el recibido en el parametro
+                    foreach (var venta in db.Venta.Where(i => i.IdUsuario == idUsuario).ToList())
+                    {
+                        model.LaVenta = new Ventum
+                        {
+                            Id = venta.Id,
+                            Fecha = venta.Fecha,
+                            IdUsuario = venta.IdUsuario,
+                            Total = venta.Total
+                        };                        
+
+                        //recorremos la tabla conceptos en donde la idVenta sea igual a la id en tabla venta
+                        foreach (var conceptos in db.Conceptos.Where(i=> i.IdVenta == venta.Id))
+                        {
+                            model.LosConceptos = new Models.Concepto
+                            {
+                                Cantidad = conceptos.Cantidad,
+                                IdProducto = conceptos.IdProducto,
+                                Importe = conceptos.Importe,
+                                PrecioUnitario = conceptos.PrecioUnitario,
+                                Id = conceptos.Id,
+                                IdVenta = conceptos.IdVenta
+                            };
+                            model.LaVenta.Conceptos.Add(model.LosConceptos); //se agregan los conceptos al modelo
+                        }
+                        lst.Add(model.LaVenta);
+                    }
+                }
+                catch (Exception)
+                {
+                    throw new Exception("No se pudo mostrar los pedidos del usuario.");
+                }
+                return lst.Skip((pag - 1) * cantidadDeRegistrosPorPagina)
+                    .Take(cantidadDeRegistrosPorPagina).ToList();
             }
         }
     }

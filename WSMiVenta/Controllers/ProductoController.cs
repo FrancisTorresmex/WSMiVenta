@@ -26,18 +26,14 @@ namespace WSMiVenta.Controllers
 
         //Ver todo
         [HttpGet]
-        public IActionResult GetProduct()
+        public IActionResult GetProduct(int pag)
         {
             ResponseGeneral response = new ResponseGeneral(); 
 
             try
             {
-                using (MiVentaContext db = new MiVentaContext())
-                {
-                    var lst = db.Productos.OrderBy(i => i.Id).ToList();
-                    response.Success = 1;
-                    response.Data = lst;
-                }
+                response.Data = _product.Get(pag);
+                response.Success = 1;
             }
             catch (Exception ex)
             {
