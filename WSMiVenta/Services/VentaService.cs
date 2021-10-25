@@ -41,11 +41,11 @@ namespace WSMiVenta.Services
                         }
                         transaction.Commit(); // sin esto, las tablas se bloquearian al pasar por aqui y quedarian bloqueadas(es impirtante ponerlo)
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         transaction.Rollback(); //si la transaccion falla, con esto regreso al estado anterior antes así es como si esa transacción
                         throw new Exception("Error al agregar la compra");
-                        Console.WriteLine(ex.InnerException);
+                        //Console.WriteLine(ex.InnerException);
                     }
                 }                
             }
