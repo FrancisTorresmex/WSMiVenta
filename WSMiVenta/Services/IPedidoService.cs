@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WSMiVenta.Models;
 using WSMiVenta.Models.Request;
 
 namespace WSMiVenta.Services
 {
     public interface IPedidoService
     {
-        List<Ventum> getOrdersAdmin(int pag);
+        List<PedidoRequest> getOrdersAdmin(int pag);
 
-        List<Ventum> getOrdersUser(int id, int pag);
+        List<PedidoRequest> getOrdersUser(int id, int pag);
     }
 }

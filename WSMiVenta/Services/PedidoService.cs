@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using WSMiVenta.Models;
 using WSMiVenta.Models.Request;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace WSMiVenta.Services
 {
@@ -11,43 +13,49 @@ namespace WSMiVenta.Services
     {
 
         //obtener todos los pedidos (con paginación) (admin)
-        public List<Ventum> getOrdersAdmin(int pag = 1)
+        public List<PedidoRequest> getOrdersAdmin(int pag = 1)
         {
             var cantidadRegistrosPorPagina = 5; //numero de registros (ordenes) que se mostraran por página
 
             using (MiVentaContext db = new MiVentaContext())
             {
                 PedidoRequest model = new PedidoRequest();
-                List<Ventum> lst = new List<Ventum>(); //lista en la que se guardara todo
+                List<PedidoRequest> lst = new List<PedidoRequest>(); //lista en la que se guardara todo
 
                 try
                 {
                     foreach (var venta in db.Venta.ToList()) //recorremos la tabla Venta
                     {
-                        model.LaVenta = new Ventum
+                        model = new PedidoRequest
                         {
-                            Id = venta.Id,
-                            IdUsuario = venta.IdUsuario,
+                            IdUsuario = (int)venta.IdUsuario,
+                            IdCliente = venta.IdCliente,
+                            Fecha = venta.Fecha,
+                            idVenta = venta.Id,
                             Total = venta.Total
                         };
 
                         //recorremos la tabla Coceptos, donde la id de la venta sea igual a la idVenta del concepto (para que vaya uniendo la venta con sus conceptos)
                         foreach (var conceptos in db.Conceptos.Where(i => i.IdVenta == venta.Id).ToList())
                         {
-                            model.LosConceptos = new Models.Concepto // los conceptos de mi modelo seran un nuevo objeto de mi tabla conceptos
+                            List<ElConcepto> lstConcept = new List<ElConcepto>();
+                            var prod = db.Productos.Find(conceptos.IdProducto); //busca en la tabla productos la idProducto que entra y le asigna el nombre del producto
+
+                            ElConcepto concepto = new ElConcepto                            
                             {
                                 IdVenta = venta.Id, //la id de la venta en coceptos debe ser la misma que la de mi id de mi tabla venta
-                                Id = conceptos.Id,
+                                NombrePorducto = prod.Nombre,
                                 IdProducto = conceptos.IdProducto,
                                 Importe = conceptos.Importe,
                                 PrecioUnitario = conceptos.PrecioUnitario,
                                 Cantidad = conceptos.Cantidad,
                             };
-                            model.LaVenta.Conceptos.Add(model.LosConceptos);   //asigno los conceptos                         
+                            lstConcept.Add(concepto); //se añade el objeto concepto a lstConcept (se hace así para evitar un error de incompatibilidad de datos)
+                            model.LosConceptos = lstConcept; // se le asigna lstConcept a mi modelo.LosConceptos
                         }
-                        lst.Add(model.LaVenta); //se agregan a la lista                        
+                        lst.Add(model); //se agregan a la lista                        
                     };
-                    
+
                 }
                 catch (Exception)
                 {
@@ -63,49 +71,58 @@ namespace WSMiVenta.Services
 
 
         //Obtener todos los pedidos (paginado) (usuario normal)
-        public List<Ventum> getOrdersUser(int idUsuario, int pag = 1)
+        public List<PedidoRequest> getOrdersUser(int idUsuario, int pag)
         {
             var cantidadDeRegistrosPorPagina = 5; //numero de pedidos a mostrar por página
 
+
             using (MiVentaContext db = new MiVentaContext())
-            {
+            {                
+                List<PedidoRequest> lst = new List<PedidoRequest>();
                 PedidoRequest model = new PedidoRequest();
-                List<Ventum> lst = new List<Ventum>();
 
                 try
                 {
                     //recorremos la tabla ventas donde el id de usuario coincida con el recibido en el parametro
                     foreach (var venta in db.Venta.Where(i => i.IdUsuario == idUsuario).ToList())
                     {
-                        model.LaVenta = new Ventum
+                        model = new PedidoRequest
                         {
-                            Id = venta.Id,
+                            idVenta = venta.Id,
+                            IdUsuario = (int)venta.IdUsuario,
                             Fecha = venta.Fecha,
-                            IdUsuario = venta.IdUsuario,
-                            Total = venta.Total
-                        };                        
+                            Total = venta.Total,
+                            IdCliente = venta.IdCliente
+                        };
 
                         //recorremos la tabla conceptos en donde la idVenta sea igual a la id en tabla venta
-                        foreach (var conceptos in db.Conceptos.Where(i=> i.IdVenta == venta.Id))
+                        foreach (var conceptos in db.Conceptos.Where(i => i.IdVenta == venta.Id).ToList())
                         {
-                            model.LosConceptos = new Models.Concepto
+                            List<ElConcepto> lstConcepto = new List<ElConcepto>(); // objeto de tipo lista
+                            var prod = db.Productos.Find(conceptos.IdProducto); //busca en la tabla productos la idProducto que entra y le asigna el nombre del producto
+
+                            ElConcepto concepto = new ElConcepto
                             {
+                                IdVenta = venta.Id,
+                                NombrePorducto = prod.Nombre,
                                 Cantidad = conceptos.Cantidad,
-                                IdProducto = conceptos.IdProducto,
                                 Importe = conceptos.Importe,
                                 PrecioUnitario = conceptos.PrecioUnitario,
-                                Id = conceptos.Id,
-                                IdVenta = conceptos.IdVenta
+                                IdProducto = conceptos.IdProducto,
                             };
-                            model.LaVenta.Conceptos.Add(model.LosConceptos); //se agregan los conceptos al modelo
-                        }
-                        lst.Add(model.LaVenta);
+                            
+                            lstConcepto.Add(concepto); //agregamos a lstConcepto el objeto concepto por cada vez
+                            model.LosConceptos = lstConcepto;// se le asignan los conceptos al modelo                            
+                        }                        
+                        lst.Add(model); //se añaden a la lista final
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.InnerException);
                     throw new Exception("No se pudo mostrar los pedidos del usuario.");
                 }
+
                 return lst.Skip((pag - 1) * cantidadDeRegistrosPorPagina)
                     .Take(cantidadDeRegistrosPorPagina).ToList();
             }
