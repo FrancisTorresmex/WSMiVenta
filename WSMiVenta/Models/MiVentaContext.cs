@@ -19,6 +19,7 @@ namespace WSMiVenta.Models
 
         public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<Concepto> Conceptos { get; set; }
+        public virtual DbSet<Direccion> Direccions { get; set; }
         public virtual DbSet<Producto> Productos { get; set; }
         public virtual DbSet<Rol> Rols { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
@@ -35,8 +36,6 @@ namespace WSMiVenta.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-
             modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
 
             modelBuilder.Entity<Cliente>(entity =>
@@ -83,6 +82,33 @@ namespace WSMiVenta.Models
                     .HasForeignKey(d => d.IdVenta)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_concepto_venta");
+            });
+
+            modelBuilder.Entity<Direccion>(entity =>
+            {
+                entity.ToTable("direccion");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Calle)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("calle");
+
+                entity.Property(e => e.Colonia)
+                    .IsRequired()
+                    .HasMaxLength(80)
+                    .IsUnicode(false)
+                    .HasColumnName("colonia");
+
+                entity.Property(e => e.Estado)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("estado");
+
+                entity.Property(e => e.Numero).HasColumnName("numero");
             });
 
             modelBuilder.Entity<Producto>(entity =>
@@ -166,6 +192,8 @@ namespace WSMiVenta.Models
 
                 entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
 
+                entity.Property(e => e.IdDireccion).HasColumnName("id_direccion");
+
                 entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
 
                 entity.Property(e => e.Total)
@@ -177,6 +205,11 @@ namespace WSMiVenta.Models
                     .HasForeignKey(d => d.IdCliente)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_venta_cliente");
+
+                entity.HasOne(d => d.IdDireccionNavigation)
+                    .WithMany(p => p.Venta)
+                    .HasForeignKey(d => d.IdDireccion)
+                    .HasConstraintName("FK_venta_direccion");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Venta)

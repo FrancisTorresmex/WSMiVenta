@@ -30,9 +30,26 @@ namespace WSMiVenta.Models.Request
         public decimal Total { get; set; }
 
         [Required]
+        public LaDireccion LaDireccion { get; set; }
+
+        [Required]
         public List<ElConcepto> LosConceptos { get; set; }
 
     }
+
+    public class LaDireccion
+    {
+        public int Id { get; set; }
+
+        public string Estado { get; set; }
+
+        public string Colonia { get; set; }
+
+        public string Calle { get; set; }
+
+        public int Numero { get; set; }
+    }
+
 
     public class ElConcepto
     {

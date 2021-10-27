@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WSMiVenta.Models;
 using WSMiVenta.Models.Request;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace WSMiVenta.Services
@@ -20,25 +19,37 @@ namespace WSMiVenta.Services
             using (MiVentaContext db = new MiVentaContext())
             {
                 PedidoRequest model = new PedidoRequest();
-                List<PedidoRequest> lst = new List<PedidoRequest>(); //lista en la que se guardara todo
+                List<PedidoRequest> lst = new List<PedidoRequest>(); //lista en la que se guardara todo                
 
                 try
                 {
                     foreach (var venta in db.Venta.ToList()) //recorremos la tabla Venta
                     {
+                        var address = db.Direccions.Find(venta.IdDireccion);
+
+                        LaDireccion direccion = new LaDireccion //lleno el modelo con la dirección encontrada
+                        {
+                            Id = address.Id,
+                            Estado = address.Estado,
+                            Colonia = address.Colonia,
+                            Calle = address.Calle,
+                            Numero = address.Numero
+                        };
+
                         model = new PedidoRequest
                         {
                             IdUsuario = (int)venta.IdUsuario,
                             IdCliente = venta.IdCliente,
                             Fecha = venta.Fecha,
                             idVenta = venta.Id,
-                            Total = venta.Total
+                            Total = venta.Total,
+                            LaDireccion = direccion //se añade la dirección al modelo
                         };
 
                         //recorremos la tabla Coceptos, donde la id de la venta sea igual a la idVenta del concepto (para que vaya uniendo la venta con sus conceptos)
+                        List<ElConcepto> lstConcept = new List<ElConcepto>(); //lista en donde se iran guardando los conceptos de cada venta
                         foreach (var conceptos in db.Conceptos.Where(i => i.IdVenta == venta.Id).ToList())
-                        {
-                            List<ElConcepto> lstConcept = new List<ElConcepto>();
+                        {                            
                             var prod = db.Productos.Find(conceptos.IdProducto); //busca en la tabla productos la idProducto que entra y le asigna el nombre del producto
 
                             ElConcepto concepto = new ElConcepto                            
@@ -51,8 +62,9 @@ namespace WSMiVenta.Services
                                 Cantidad = conceptos.Cantidad,
                             };
                             lstConcept.Add(concepto); //se añade el objeto concepto a lstConcept (se hace así para evitar un error de incompatibilidad de datos)
-                            model.LosConceptos = lstConcept; // se le asigna lstConcept a mi modelo.LosConceptos
+                            
                         }
+                        model.LosConceptos = lstConcept; // se le asigna lstConcept a mi modelo.LosConceptos
                         lst.Add(model); //se agregan a la lista                        
                     };
 
@@ -68,6 +80,13 @@ namespace WSMiVenta.Services
                     .Take(cantidadRegistrosPorPagina).ToList();
             }
         }
+
+
+
+
+
+
+
 
 
         //Obtener todos los pedidos (paginado) (usuario normal)
@@ -86,19 +105,30 @@ namespace WSMiVenta.Services
                     //recorremos la tabla ventas donde el id de usuario coincida con el recibido en el parametro
                     foreach (var venta in db.Venta.Where(i => i.IdUsuario == idUsuario).ToList())
                     {
+                        var address = db.Direccions.Find(venta.IdDireccion); // buscamos la id dirección que coincida con la fk de id direccion de la venta
+
+                        LaDireccion direccion = new LaDireccion
+                        {                            
+                            Estado = address.Estado,
+                            Colonia = address.Colonia,
+                            Calle = address.Calle,
+                            Numero = address.Numero
+                        };
+
                         model = new PedidoRequest
                         {
                             idVenta = venta.Id,
                             IdUsuario = (int)venta.IdUsuario,
                             Fecha = venta.Fecha,
                             Total = venta.Total,
-                            IdCliente = venta.IdCliente
+                            IdCliente = venta.IdCliente,
+                            LaDireccion = direccion //se añade la dirección de esa venta al modelo
                         };
 
                         //recorremos la tabla conceptos en donde la idVenta sea igual a la id en tabla venta
+                        List<ElConcepto> lstConcepto = new List<ElConcepto>(); // lista en donde se guardaran todos los conceptos de una venta, por cada repetición
                         foreach (var conceptos in db.Conceptos.Where(i => i.IdVenta == venta.Id).ToList())
-                        {
-                            List<ElConcepto> lstConcepto = new List<ElConcepto>(); // objeto de tipo lista
+                        {                            
                             var prod = db.Productos.Find(conceptos.IdProducto); //busca en la tabla productos la idProducto que entra y le asigna el nombre del producto
 
                             ElConcepto concepto = new ElConcepto
