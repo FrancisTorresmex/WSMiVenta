@@ -55,7 +55,7 @@ namespace WSMiVenta.Services
                             ElConcepto concepto = new ElConcepto                            
                             {
                                 IdVenta = venta.Id, //la id de la venta en coceptos debe ser la misma que la de mi id de mi tabla venta
-                                NombrePorducto = prod.Nombre,
+                                NombreProducto = prod.Nombre,
                                 IdProducto = conceptos.IdProducto,
                                 Importe = conceptos.Importe,
                                 PrecioUnitario = conceptos.PrecioUnitario,
@@ -94,7 +94,6 @@ namespace WSMiVenta.Services
         {
             var cantidadDeRegistrosPorPagina = 5; //numero de pedidos a mostrar por página
 
-
             using (MiVentaContext db = new MiVentaContext())
             {                
                 List<PedidoRequest> lst = new List<PedidoRequest>();
@@ -108,7 +107,8 @@ namespace WSMiVenta.Services
                         var address = db.Direccions.Find(venta.IdDireccion); // buscamos la id dirección que coincida con la fk de id direccion de la venta
 
                         LaDireccion direccion = new LaDireccion
-                        {                            
+                        {                         
+                            Id = address.Id,
                             Estado = address.Estado,
                             Colonia = address.Colonia,
                             Calle = address.Calle,
@@ -134,7 +134,7 @@ namespace WSMiVenta.Services
                             ElConcepto concepto = new ElConcepto
                             {
                                 IdVenta = venta.Id,
-                                NombrePorducto = prod.Nombre,
+                                NombreProducto = prod.Nombre,
                                 Cantidad = conceptos.Cantidad,
                                 Importe = conceptos.Importe,
                                 PrecioUnitario = conceptos.PrecioUnitario,

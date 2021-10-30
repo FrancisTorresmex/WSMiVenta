@@ -59,7 +59,7 @@ namespace WSMiVenta.Models.Request
 
         public decimal PrecioUnitario { get; set; }
 
-        public string NombrePorducto { get; set; }
+        public string NombreProducto { get; set; }
 
         public int IdProducto { get; set; }
 

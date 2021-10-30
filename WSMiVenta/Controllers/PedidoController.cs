@@ -9,12 +9,14 @@ using WSMiVenta.Models.Request;
 using WSMiVenta.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 using WSMiVenta.Services;
+using Microsoft.AspNetCore.Authorization;
 //using System.Linq;
 
 namespace WSMiVenta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PedidoController : ControllerBase
     {
         private IPedidoService _orders;
