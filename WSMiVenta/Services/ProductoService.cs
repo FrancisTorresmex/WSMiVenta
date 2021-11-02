@@ -40,7 +40,7 @@ namespace WSMiVenta.Services
             {
                 try
                 {
-                    var product = new Producto();
+                    var product = new Producto();                    
                     product.Nombre = model.Nombre;
                     product.PrecioUnitario = model.PrecioUnitario;
                     product.Existencia = 1;

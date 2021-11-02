@@ -64,11 +64,14 @@ namespace WSMiVenta.Services
                 // buscamos en la bd con la tabla Usuarios donde el Email recibido se encuentre, y tambien la contraseña encryptada sea igual 
                 var user = db.Usuarios.Where(d => d.Email == model.email && d.Password == spassword).FirstOrDefault(); //el firstOrDefault regresa el primer elmento que coincida o nul
 
+                var NameRol = db.Rols.Find(user.IdRol); //buscamos en la tabla roles (esto para agregarle el nombre del rolal que pertenece el usuario al token)
+
                 if (user == null) return null; // si no encuentra coincidencias retornamos null
 
                 access.Id = user.Id;
                 access.Email = user.Email; //si lo encuentra, asignamos
-                access.Rol = (int)user.IdRol;
+                access.Rol = NameRol.Nombre;
+                //access.Rol = (int)user.IdRol;
                 access.Token = GetToken(user);                                                          
                 
             }
@@ -80,6 +83,10 @@ namespace WSMiVenta.Services
         //Método para generarle un token
         private string GetToken(Usuario usuario)
         {
+            MiVentaContext db = new MiVentaContext();
+            var NameRol = db.Rols.Find(usuario.IdRol); //buscamos en la tabla roles (esto para agregarle el nombre del rolal que pertenece el usuario al token)
+
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var llave = Encoding.ASCII.GetBytes(_appSettings.Secreto);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -89,14 +96,16 @@ namespace WSMiVenta.Services
                     new Claim[]
                     {
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), //le agrego la id al token
-                        new Claim(ClaimTypes.Email, usuario.Email), //le agrego el correo al token                        
-                        new Claim(ClaimTypes.Role, usuario.IdRol.ToString()) //agrego el tipo de rol
+                        new Claim(ClaimTypes.Email, usuario.Email), //le agrego el correo al token
+                        new Claim(ClaimTypes.Role, NameRol.Nombre) //coloco validación del nombre de rol (esto sirve tambien para vlaidar el rol en el [Authorize = (Roles = "admin")])
+                        //new Claim(ClaimTypes.Role,   usuario.Id.ToString()) //agrego el tipo de rol (esto sirve tambien para vlaidar el rol en el [Authorize(Roles = "5")])
                     }
                 ),
                 Expires = DateTime.UtcNow.AddDays(15), //le agrego que expire cada 15 dias
                 //encriptar la info
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(llave), SecurityAlgorithms.HmacSha256Signature) //el HmacSha256Signature es el tipo de firma que tendra (elegi esa pero hay mas)                
             };
+
             //Creación del token
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token); //escribimos el token y lo retornamos

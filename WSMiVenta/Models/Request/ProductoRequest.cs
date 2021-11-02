@@ -9,7 +9,7 @@ namespace WSMiVenta.Models.Request
     public class ProductoRequest
     {
         [Required]
-        [Range(1, double.MaxValue, ErrorMessage ="El idProducto debe ser mayor a 1")]
+        //[Range(1, double.MaxValue, ErrorMessage = "El idProducto debe ser mayor a 1")]
         public int Id { get; set; }
 
         [Required]

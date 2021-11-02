@@ -25,6 +25,7 @@ namespace WSMiVenta.Controllers
 
         //Agregar
         [HttpPost]
+        [Authorize(Roles = "normal")]
         public IActionResult Add(VentaRequest model)
         {
             ResponseGeneral response = new ResponseGeneral(); 

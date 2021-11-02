@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WSMiVenta.Models.Common;
@@ -106,6 +107,30 @@ namespace WSMiVenta
                     };
                 });
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("admin", policy =>
+            //    {
+            //        policy.RequireClaim(ClaimTypes.Role, "admin");                    
+
+            //        policy.RequireAssertion((context) =>
+            //        {
+            //            foreach (var item in context.User.Claims)
+            //            {
+            //                var isAdmin = item.Type.Equals(ClaimTypes.Role, StringComparison.InvariantCultureIgnoreCase) && item.Value.Equals("admin", StringComparison.InvariantCultureIgnoreCase);
+
+            //                if (isAdmin)
+            //                {
+            //                    return true;
+            //                }                            
+            //            }
+            //            return false;
+            //        });
+
+            //    });
+            //});
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

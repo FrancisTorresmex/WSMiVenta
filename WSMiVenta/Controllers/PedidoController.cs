@@ -16,7 +16,7 @@ namespace WSMiVenta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize] //debe tener sesión iniciada
     public class PedidoController : ControllerBase
     {
         private IPedidoService _orders;
@@ -28,6 +28,7 @@ namespace WSMiVenta.Controllers
 
         //Ver pedidos (admin)
         [HttpGet("Administrador")]
+        [Authorize(Roles = "admin")]
         public IActionResult getPedidos(int pag)
         {
           ResponseGeneral response = new ResponseGeneral();
@@ -48,6 +49,7 @@ namespace WSMiVenta.Controllers
 
         //Ver pedidos (usuario)
         [HttpGet("Usuario")]
+        [Authorize(Roles = "normal")]
         public IActionResult getPedio(int id, int pag)
         {
             ResponseGeneral response = new ResponseGeneral();

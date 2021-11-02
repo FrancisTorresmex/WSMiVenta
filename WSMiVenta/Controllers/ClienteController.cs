@@ -49,6 +49,7 @@ namespace WSMiVenta.Controllers
 
         //añadir
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Add(ClienteRequest model)
         {
             ResponseGeneral response = new ResponseGeneral();            
@@ -68,6 +69,7 @@ namespace WSMiVenta.Controllers
 
         //Editar
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(ClienteRequest model)
         {
             ResponseGeneral response = new ResponseGeneral();            
@@ -88,6 +90,7 @@ namespace WSMiVenta.Controllers
 
         //eliminar
         [HttpDelete]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             ResponseGeneral response = new ResponseGeneral();            
