@@ -83,6 +83,27 @@ namespace WSMiVenta.Controllers
             return Ok(response);
         }
 
+
+        //Buscar
+        [HttpGet("Search")]
+        [Authorize]
+        public IActionResult Search(int id, char nombre)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {   
+                response.Data = _product.Search(id, nombre);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+            return Ok(response);
+        }
+
+
         [HttpDelete]
         [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)

@@ -11,5 +11,9 @@ namespace WSMiVenta.Services
         List<PedidoRequest> getOrdersAdmin(int pag);
 
         List<PedidoRequest> getOrdersUser(int id, int pag);
+
+        List<PedidoRequest> searchOrderAdmin(int id);
+
+        List<PedidoRequest> searchOrderUser(int idVenta, int idUsuario);
     }
 }

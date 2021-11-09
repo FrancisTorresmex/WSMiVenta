@@ -46,6 +46,24 @@ namespace WSMiVenta.Controllers
         }
 
 
+        [HttpGet("Administrador/Search/Orders")]
+        [Authorize(Roles = "admin")]
+        public IActionResult searchAdmin(int id)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                response.Data = _orders.searchOrderAdmin(id);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+            return Ok(response);
+        }
+
 
         //Ver pedidos (usuario)
         [HttpGet("Usuario")]
@@ -70,6 +88,27 @@ namespace WSMiVenta.Controllers
             }
             return Ok(response);
         }
+
+
+        [HttpGet("Usuario/Search/Orders")]
+        [Authorize(Roles = "normal")]
+        public IActionResult searchUser(int idUsuario, int idVenta)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                response.Data = _orders.searchOrderUser(idVenta, idUsuario);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+            return Ok(response);
+        }
+
+
     }
 
 

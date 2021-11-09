@@ -62,11 +62,11 @@ namespace WSMiVenta.Services
                 string spassword = Encriptar.GetSHA256(model.Password); //uso mi clase Encrypt con el metodo getSha256 y le paso de parametro de model recibido para encryptar
 
                 // buscamos en la bd con la tabla Usuarios donde el Email recibido se encuentre, y tambien la contraseña encryptada sea igual 
-                var user = db.Usuarios.Where(d => d.Email == model.email && d.Password == spassword).FirstOrDefault(); //el firstOrDefault regresa el primer elmento que coincida o nul
-
-                var NameRol = db.Rols.Find(user.IdRol); //buscamos en la tabla roles (esto para agregarle el nombre del rolal que pertenece el usuario al token)
+                var user = db.Usuarios.Where(d => d.Email == model.email && d.Password == spassword).FirstOrDefault(); //el firstOrDefault regresa el primer elmento que coincida o nul                
 
                 if (user == null) return null; // si no encuentra coincidencias retornamos null
+
+                var NameRol = db.Rols.Find(user.IdRol); //buscamos en la tabla roles (esto para agregarle el nombre del rolal que pertenece el usuario al token)
 
                 access.Id = user.Id;
                 access.Email = user.Email; //si lo encuentra, asignamos

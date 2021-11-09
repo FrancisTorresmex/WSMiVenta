@@ -16,9 +16,8 @@ namespace WSMiVenta.Services
                 using (var transaction = db.Database.BeginTransaction()) //con BeginTransaction iniciamos una inserccion en la base (que se podra revertir si sale algo mal)
                 {
                     try
-                    {
-
-                        var address = new Models.Direccion(); // objeto de la tabla Dirección
+                    {                        
+                        var address = new Models.Direccion(); // objeto de la tabla Dirección                        
 
                         address.Estado = model.Direccion.Estado; //llenado del modelo de tipo dirección
                         address.Colonia = model.Direccion.Colonia;
@@ -40,6 +39,13 @@ namespace WSMiVenta.Services
                         foreach (var item in model.Conceptos)
                         {
                             var concept = new Models.Concepto(); //tipo Models.Concepto (es el modelo de concepto dentro de VentaRequest)
+
+                            var isAvailable = db.Productos.Find(item.IdProducto);    //buscamos en la tabla productos si este se encuentra en existencia                        
+
+                            if(isAvailable.Existencia == 0) //si no esta en existencia (0), colocamos un Excepcion para que marque error al hacer la venta.
+                            {
+                                throw new Exception("Error, se intento agregar un producto agotado");
+                            }
 
                             concept.Cantidad = item.Cantidad;
                             concept.Importe = item.Importe;

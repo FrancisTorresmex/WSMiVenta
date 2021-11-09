@@ -14,7 +14,7 @@ namespace WSMiVenta.Services
         //obtener todos los pedidos (con paginación) (admin)
         public List<PedidoRequest> getOrdersAdmin(int pag = 1)
         {
-            var cantidadRegistrosPorPagina = 5; //numero de registros (ordenes) que se mostraran por página
+            var cantidadRegistrosPorPagina = 10; //numero de registros (ordenes) que se mostraran por página
 
             using (MiVentaContext db = new MiVentaContext())
             {
@@ -65,7 +65,8 @@ namespace WSMiVenta.Services
                             
                         }
                         model.LosConceptos = lstConcept; // se le asigna lstConcept a mi modelo.LosConceptos
-                        lst.Add(model); //se agregan a la lista                        
+                        lst.Add(model); //se agregan a la lista                                                
+
                     };
 
                 }
@@ -83,6 +84,31 @@ namespace WSMiVenta.Services
 
 
 
+        //Buscar un pedido (admin)
+        public List<PedidoRequest> searchOrderAdmin(int id)
+        {
+            List<PedidoRequest> lst = new List<PedidoRequest>();
+
+            using (MiVentaContext db = new MiVentaContext())
+            {
+                try
+                {
+                    //recorremos el metodo getOrdersAdmin() reusando todos los modelos
+                    foreach (var item in getOrdersAdmin().ToList())
+                    {
+                        if (item.idVenta == id) //si coincide la id buscada lo agregamos a la lista
+                        {
+                            lst.Add(item);
+                        }
+                    }
+                    return lst;
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Error al buscar el pedido");
+                }
+            }
+        }
 
 
 
@@ -90,7 +116,7 @@ namespace WSMiVenta.Services
 
 
         //Obtener todos los pedidos (paginado) (usuario normal)
-        public List<PedidoRequest> getOrdersUser(int idUsuario, int pag)
+        public List<PedidoRequest> getOrdersUser(int idUsuario, int pag = 1)
         {
             var cantidadDeRegistrosPorPagina = 5; //numero de pedidos a mostrar por página
 
@@ -157,5 +183,35 @@ namespace WSMiVenta.Services
                     .Take(cantidadDeRegistrosPorPagina).ToList();
             }
         }
+
+
+
+        //Buscar un pedido (usuario normal)
+        public List<PedidoRequest> searchOrderUser(int idVenta, int idUsuario)
+        {
+            List<PedidoRequest> lst = new List<PedidoRequest>();
+
+            using (MiVentaContext db = new MiVentaContext())
+            {
+                try
+                {
+                    //recorremos el metodo getOrdersUser() reusando todos los modelos
+                    foreach (var item in getOrdersUser(idUsuario).ToList())
+                    {
+                        if (item.idVenta == idVenta && item.IdUsuario == idUsuario) //si coincide la id buscada lo agregamos a la lista
+                        {
+                            lst.Add(item);
+                        }
+                    }
+                    return lst;
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Error al buscar el pedido");
+                }
+            }
+        }
+
+
     }
 }
