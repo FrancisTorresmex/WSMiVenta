@@ -15,7 +15,7 @@ namespace WSMiVenta.Services
 
         public void Edit(ProductoRequest model);
 
-        List<Producto> Search(int id, char nombre);
+        List<Producto> Search(string article);
 
         public void Delete(int id);
     }

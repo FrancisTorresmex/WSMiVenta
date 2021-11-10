@@ -71,22 +71,34 @@ namespace WSMiVenta.Services
         }
 
         //Buscar
-        public List<Producto> Search(int Id, char nombre)
+        public List<Producto> Search(string article)
         {
-            List<Producto> lst = new List<Producto>();
+            List<Producto> lst = new List<Producto>();            
 
             using (MiVentaContext db = new MiVentaContext())
-            {                
+            {
+                int number;
+                bool isNumber = int.TryParse(article, out number); //si el article recibido puede convertirse a numero signifca que es entero, y lo asignamos a la nueva variable number
+
                 try
                 {
                     foreach (var productos in db.Productos.ToList())
-                    {                        
-                        //si en la busqueda la id coincide con la id de el producto buscado ó las letras coinciden con parte del nombre de un producto
-                        //se agrega a la lista
-                        if (productos.Id.Equals(Id) || productos.Nombre.Contains(nombre))
+                    {                      
+                        if (isNumber == true) // si isNumber es verdadero lo tomaremos como numero la variable number y buscaremos el id
                         {
-                            lst.Add(productos);                            
-                        }                      
+                            if (productos.Id.Equals(number))
+                            {
+                                lst.Add(productos);
+                            }
+                        }
+                        
+                        if(isNumber == false) // si isNumber es false lo tomaremos como stirng y buscaremos con la variable article
+                        {
+                            if (productos.Nombre.Contains(article))
+                            {
+                                lst.Add(productos);
+                            }
+                        }
                     }
                     return lst;
                 }

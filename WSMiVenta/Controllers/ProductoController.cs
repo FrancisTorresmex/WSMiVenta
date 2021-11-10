@@ -87,13 +87,13 @@ namespace WSMiVenta.Controllers
         //Buscar
         [HttpGet("Search")]
         [Authorize]
-        public IActionResult Search(int id, char nombre)
+        public IActionResult Search(string article)
         {
             ResponseGeneral response = new ResponseGeneral();
 
             try
             {   
-                response.Data = _product.Search(id, nombre);
+                response.Data = _product.Search(article);
                 response.Success = 1;
             }
             catch (Exception ex)
