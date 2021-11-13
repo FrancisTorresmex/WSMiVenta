@@ -77,9 +77,10 @@ namespace WSMiVenta
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<IVentaService, VentaService>();
-            services.AddScoped<IUsuarioService, UsuarioServicio>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRolService, RolService>();
             services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
 
             //Configuración de JWT -------------------------------------------------------------------------------------------------------------------------------------------
             var appSettingsSecction = Configuration.GetSection("AppSettings"); //variable, el GetSection lleva entre parentesis el nombre de la variable declarada en appSettings.json

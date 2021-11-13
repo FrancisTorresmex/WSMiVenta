@@ -15,11 +15,11 @@ using WSMiVenta.Tools;
 
 namespace WSMiVenta.Services
 {
-    public class UsuarioServicio : IUsuarioService
+    public class AuthService : IAuthService
     {
         private readonly AppSettingsCommon _appSettings;
 
-        public UsuarioServicio(IOptions<AppSettingsCommon> appSettings)
+        public AuthService(IOptions<AppSettingsCommon> appSettings)
         {
             this._appSettings = appSettings.Value; //queremos el valor que viene de IOptions de sistema
         }
@@ -69,7 +69,7 @@ namespace WSMiVenta.Services
                 var NameRol = db.Rols.Find(user.IdRol); //buscamos en la tabla roles (esto para agregarle el nombre del rolal que pertenece el usuario al token)
 
                 access.Id = user.Id;
-                access.Email = user.Email; //si lo encuentra, asignamos
+                access.Nombre = user.Nombre; //si lo encuentra, asignamos
                 access.Rol = NameRol.Nombre;
                 //access.Rol = (int)user.IdRol;
                 access.Token = GetToken(user);                                                          
@@ -96,7 +96,7 @@ namespace WSMiVenta.Services
                     new Claim[]
                     {
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), //le agrego la id al token
-                        new Claim(ClaimTypes.Email, usuario.Email), //le agrego el correo al token
+                        new Claim(ClaimTypes.Name, usuario.Nombre), //le agrego el nombre de usuario al token
                         new Claim(ClaimTypes.Role, NameRol.Nombre) //coloco validación del nombre de rol (esto sirve tambien para vlaidar el rol en el [Authorize = (Roles = "admin")])
                         //new Claim(ClaimTypes.Role,   usuario.Id.ToString()) //agrego el tipo de rol (esto sirve tambien para vlaidar el rol en el [Authorize(Roles = "5")])
                     }
@@ -109,36 +109,6 @@ namespace WSMiVenta.Services
             //Creación del token
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token); //escribimos el token y lo retornamos
-        }
-
-
-        //Modificar datos de usuario
-        public void EditUser (ModificarUsuarioRequest model)
-        {
-            using(MiVentaContext db = new MiVentaContext())
-            {
-                try
-                {
-                    Usuario user = db.Usuarios.Find(model.Id);                    
-
-                    string spassword = Encriptar.GetSHA256(model.OldPassword); //encriptamos la contraseña para compararla con la que esta en la base
-                    
-                    if(user.Password == spassword) //si la contraseña coincide accedemos a cambiar los datos (nombre y contraseña)
-                    {
-                        string newPassword = Encriptar.GetSHA256(model.NewPassword); //encripto la nueva contraseña
-
-                        user.Password = newPassword; 
-                        user.Nombre = model.Nombre;
-                        db.Update(user);
-                        db.SaveChanges();
-                    }                    
-
-                }catch(Exception)
-                {
-                    throw new Exception("No se puedo editar el usuario correctamente");
-                }
-                
-            }
         }
         
     }

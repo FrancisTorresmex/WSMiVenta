@@ -23,7 +23,7 @@ namespace WSMiVenta.Services
 
                 try
                 {
-                    foreach (var venta in db.Venta.ToList()) //recorremos la tabla Venta
+                    foreach (var venta in db.Venta.OrderByDescending(d => d.Id).ToList()) //recorremos la tabla Venta
                     {
                         var address = db.Direccions.Find(venta.IdDireccion);
 
@@ -128,7 +128,7 @@ namespace WSMiVenta.Services
                 try
                 {
                     //recorremos la tabla ventas donde el id de usuario coincida con el recibido en el parametro
-                    foreach (var venta in db.Venta.Where(i => i.IdUsuario == idUsuario).ToList())
+                    foreach (var venta in db.Venta.Where(i => i.IdUsuario == idUsuario).OrderByDescending(d => d.Id).ToList())
                     {
                         var address = db.Direccions.Find(venta.IdDireccion); // buscamos la id dirección que coincida con la fk de id direccion de la venta
 
@@ -199,7 +199,7 @@ namespace WSMiVenta.Services
                     foreach (var item in getOrdersUser(idUsuario).ToList())
                     {
                         if (item.idVenta == idVenta && item.IdUsuario == idUsuario) //si coincide la id buscada lo agregamos a la lista
-                        {
+                        {                            
                             lst.Add(item);
                         }
                     }

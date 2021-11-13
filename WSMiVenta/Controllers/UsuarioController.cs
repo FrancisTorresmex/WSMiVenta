@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using WSMiVenta.Services;
 namespace WSMiVenta.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UsuarioController : ControllerBase
     {
@@ -21,69 +23,43 @@ namespace WSMiVenta.Controllers
             this._user = user;
         }
 
-        //Ingresar
-        [HttpPost("Login")]
-        public IActionResult Autentificar([FromBody] AccesoRequest model)
-        {
-            ResponseGeneral response = new ResponseGeneral();
-
-            var user = _user.Autentificar(model); //recordemos que el metodo Autoentificar puede retornar null o los datos del usuario segun se encuentre en la bd o no
-
-            if (user == null)
-            {
-                response.Message = "Usuario o contraseña incorrectos";
-                //return BadRequest(response);
-                return Ok(response);
-            }
-
-            //si existe
-            response.Success = 1;
-            response.Data = user;
-
-            return Ok(response);
-        }
-
-
-        //Registro
-        [HttpPost("Registro")]
-        public IActionResult Registro([FromBody] RegistroRequest model)
-        {
-            ResponseGeneral response = new ResponseGeneral();
-            var user = _user.Registro(model);
-
-            if (user == null) //si el correo ya existe
-            {
-                response.Message = "El Correo ya existe";
-                //return BadRequest(response);
-                return Ok(response);
-            }
-
-            //si no existe
-            response.Success = 1;
-            //response.Data = user;
-
-            return Ok(response);
-        }
-
-
-        //Modificar cuenta
-        [HttpPut("Actualizar")]
-        public IActionResult UpdateUser([FromBody] ModificarUsuarioRequest model)
+        //Modificar nombre de usuario
+        [HttpPut("Update/Name")]
+        [Authorize(Roles = "normal")]
+        public IActionResult UpdateName([FromBody] UpdateName model)
         {
             ResponseGeneral response = new ResponseGeneral();
 
             try
             {
-                _user.EditUser(model);
+                _user.EditName(model);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;                
+            }
+            return Ok(response);
+        }
+
+
+        //Modificar contraseña de usuario
+        [HttpPut("Update/Password")]
+        [Authorize(Roles = "normal")]
+        public IActionResult UpdatePassword([FromBody] UpdatePassword model)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                _user.EditPassword(model);
                 response.Success = 1;
             }
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                Console.WriteLine(ex.InnerException);
             }
             return Ok(response);
         }
-
     }
 }
