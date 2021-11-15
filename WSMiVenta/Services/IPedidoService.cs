@@ -9,11 +9,15 @@ namespace WSMiVenta.Services
     public interface IPedidoService
     {
         List<PedidoRequest> getOrdersAdmin(int pag);
+        
+        List<PedidoRequest> searchOrderAdmin(int id);
+
+        List<PedidoRequest> searchPendingAdmin(bool delivery, int pag); //true = entregado, false = pendiente 
 
         List<PedidoRequest> getOrdersUser(int id, int pag);
 
-        List<PedidoRequest> searchOrderAdmin(int id);
+        List<PedidoRequest> searchOrderUser(int idUsuario, int idVenta);
 
-        List<PedidoRequest> searchOrderUser(int idVenta, int idUsuario);
+        List<PedidoRequest> searchPendingUser(int idUser, bool delivery, int pag); //true = entregado, false = pendiente 
     }
 }

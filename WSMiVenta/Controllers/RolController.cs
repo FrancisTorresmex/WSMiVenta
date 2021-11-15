@@ -11,6 +11,9 @@ using WSMiVenta.Services;
 
 namespace WSMiVenta.Controllers
 {
+
+    //Controlador para añadir o editar roles, en esta aplicación se opto por no usarse. 
+
     [Route("api/[controller]")]
     [Authorize] //solo los registrados pueden acceder
     [ApiController]

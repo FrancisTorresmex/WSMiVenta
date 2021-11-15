@@ -21,6 +21,9 @@ namespace WSMiVenta.Models.Request
         //public double total { get; set; }
 
         [Required]
+        public bool Entrega { get; set; }
+
+        [Required]
         public Direccion Direccion { get; set; }
 
         [Required]

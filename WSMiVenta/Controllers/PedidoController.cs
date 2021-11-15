@@ -64,6 +64,25 @@ namespace WSMiVenta.Controllers
             return Ok(response);
         }
 
+        //Buscar entregas segun estado entregado o pendiente (admin)
+        [HttpGet("Administrador/Search/Orders/Delivery")]
+        [Authorize(Roles = "admin")]
+        public IActionResult searchDeliveryAdmin(bool delivery, int pag)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                response.Data = _orders.searchPendingAdmin(delivery, pag);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+            return Ok(response);
+        }
+
 
         //Ver pedidos (usuario)
         [HttpGet("Usuario")]
@@ -98,7 +117,26 @@ namespace WSMiVenta.Controllers
 
             try
             {
-                response.Data = _orders.searchOrderUser(idVenta, idUsuario);
+                response.Data = _orders.searchOrderUser(idUsuario, idVenta);
+                response.Success = 1;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+            return Ok(response);
+        }
+
+        //Buscar entregas segun estado entregado o pendiente (usuario normal)
+        [HttpGet("Usuario/Search/Orders/Delivery")]
+        [Authorize(Roles = "normal")]
+        public IActionResult searchDeliveryUser(int idUser, bool delivery, int pag)
+        {
+            ResponseGeneral response = new ResponseGeneral();
+
+            try
+            {
+                response.Data = _orders.searchPendingUser(idUser, delivery, pag);
                 response.Success = 1;
             }
             catch (Exception ex)

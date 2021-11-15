@@ -186,6 +186,8 @@ namespace WSMiVenta.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Entrega).HasColumnName("entrega");
+
                 entity.Property(e => e.Fecha)
                     .HasColumnType("datetime")
                     .HasColumnName("fecha");
@@ -209,11 +211,13 @@ namespace WSMiVenta.Models
                 entity.HasOne(d => d.IdDireccionNavigation)
                     .WithMany(p => p.Venta)
                     .HasForeignKey(d => d.IdDireccion)
-                    .HasConstraintName("FK_venta_direccion");
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_venta_direccion1");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
                     .WithMany(p => p.Venta)
                     .HasForeignKey(d => d.IdUsuario)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_venta_usuario");
             });
 

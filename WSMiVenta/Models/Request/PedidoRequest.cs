@@ -21,7 +21,10 @@ namespace WSMiVenta.Models.Request
         public int IdCliente { get; set; }
 
         [Required]
-        public int IdUsuario { get; set; }        
+        public int IdUsuario { get; set; }       
+        
+        [Required]
+        public bool Entrega { get; set; }
 
         [Required]
         public DateTime Fecha { get; set; } 

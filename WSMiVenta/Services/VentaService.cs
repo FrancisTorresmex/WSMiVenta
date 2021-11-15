@@ -30,6 +30,7 @@ namespace WSMiVenta.Services
 
                         sale.Total = model.Conceptos.Sum(op => op.Cantidad * op.PrecioUnitario); //operación para obtener el total
                         sale.Fecha = DateTime.Now;
+                        sale.Entrega = false; //false = entrega pendiente, true = entrega completada
                         sale.IdUsuario = model.IdUsuario; //id del usuario que realiza la compra 
                         sale.IdCliente = model.IdCliente;
                         sale.IdDireccion = address.Id;
