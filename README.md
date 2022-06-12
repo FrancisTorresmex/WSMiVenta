@@ -9,6 +9,13 @@ WebService creado en NetCore 5
 
 > Microsoft.AspNetCore.Authentication.JwtBearer 5.
 
+## Notas: 🌎
+> Web Service creado con DataBase First, por lo que se debera ejecutar primero el archivo script `MiVenta.sql` para la creación de la base de datos y todo lo necesario.
+
+> Cuando ya se ejecuto el script desde SQL Server, se puede pasar al paso `Conexión a base por consola`.
+
+
+
 ## Conexión a base por consola :corn:
 > Si el usuario en SQL Server es de windows
 
